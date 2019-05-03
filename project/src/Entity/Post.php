@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use Doctrine\DBAL\Types\DateType;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
@@ -26,7 +27,7 @@ class Post
     private $title;
 
     /**
-     * @ORM\Column(type="string", nullable=false)
+     * @ORM\Column(type="text", nullable=false)
      */
     private $body;
 
@@ -96,16 +97,15 @@ class Post
     /**
      * @return \DateTimeInterface
      */
-
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
     }
 
     /**
-     * @param \DateTimeInterface  $created_at
+     * @param \DateTimeInterface $created_at
      */
-    public function setCreatedAt(\DateTimeInterface  $created_at): void
+    public function setCreatedAt(\DateTimeInterface $created_at): void
     {
         $this->created_at = $created_at;
     }
