@@ -19,22 +19,22 @@ class Users
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $last_name;
+    private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $first_name;
+    private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $father_name;
+    private $fatherName;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $birth_day;
+    private $birthDay;
 
     /**
      * @ORM\Column(type="integer")
@@ -52,9 +52,9 @@ class Users
     private $photo;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $data_start_job;
+    private $dataSJob;
 
     public function getId(): ?int
     {
@@ -63,48 +63,48 @@ class Users
 
     public function getLastName(): ?string
     {
-        return $this->last_name;
+        return $this->lastName;
     }
 
-    public function setLastName(string $last_name): self
+    public function setLastName(string $lastName): self
     {
-        $this->last_name = $last_name;
+        $this->lastName = $lastName;
 
         return $this;
     }
 
     public function getFirstName(): ?string
     {
-        return $this->first_name;
+        return $this->firstName;
     }
 
-    public function setFirstName(string $first_name): self
+    public function setFirstName(string $firstName): self
     {
-        $this->first_name = $first_name;
+        $this->firstName = $firstName;
 
         return $this;
     }
 
     public function getFatherName(): ?string
     {
-        return $this->father_name;
+        return $this->fatherName;
     }
 
-    public function setFatherName(string $father_name): self
+    public function setFatherName(string $fatherName): self
     {
-        $this->father_name = $father_name;
+        $this->fatherName = $fatherName;
 
         return $this;
     }
 
     public function getBirthDay(): ?int
     {
-        return $this->birth_day;
+        return $this->birthDay;
     }
 
-    public function setBirthDay(int $birth_day): self
+    public function setBirthDay(int $birthDay): self
     {
-        $this->birth_day = $birth_day;
+        $this->birthDay = $birthDay;
 
         return $this;
     }
@@ -145,15 +145,13 @@ class Users
         return $this;
     }
 
-    public function getDataStartJob(): ?int
+    public function getDataSJob(): ?string
     {
-        return $this->data_start_job;
+        return $this->dataSJob;
     }
 
-    public function setDataStartJob(int $data_start_job): self
+    public function setDataSJob(?string $dataSJob): self
     {
-        $this->data_start_job = $data_start_job;
-
-        return $this;
+        return $this->dataSJob = $dataSJob;
     }
 }

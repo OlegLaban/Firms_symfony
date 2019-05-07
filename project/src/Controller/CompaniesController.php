@@ -14,6 +14,20 @@ class CompaniesController extends AbstractController
     {
         $this->companiesRepository = $companiesRepository;
     }
+
+    /**
+     * @Route("/", name="index_page")
+     */
+
+    public function index()
+    {
+        $companies = $this->companiesRepository->findBy([],[],5);
+
+        return $this->render('index.html.twig', [
+            'companies' => $companies
+        ]);
+    }
+
     /**
      * @Route("/companies", name="viewCompanies_page")
      */
@@ -26,6 +40,7 @@ class CompaniesController extends AbstractController
             'companies' => $companies,
         ]);
     }
+
 
 
 
