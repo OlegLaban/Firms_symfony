@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Companies;
 use App\Repository\CompaniesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,7 +34,7 @@ class CompaniesController extends AbstractController
      */
     public function viewCompanies()
     {
-        $companies = $this->companiesRepository->findAll();
+        $companies = $this->companiesRepository->findBy([],[],5);
 
 
         return $this->render('companies/index.html.twig', [
@@ -41,6 +42,16 @@ class CompaniesController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/company/{id}", name="viewCompany")
+     */
+    public function viewCompany(Companies $company)
+    {
+        return $this->render('companies/viewCompany.html.twig', [
+            'company' => $company
+        ]);
+
+    }
 
 
 

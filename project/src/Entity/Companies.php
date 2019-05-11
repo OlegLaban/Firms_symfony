@@ -41,6 +41,21 @@ class Companies
      */
     private $logo;
 
+    /**
+     * @ORM\Column(type="integer", length=11)
+     */
+    private $idFirstEmployee;
+
+    /**
+     * @ORM\Column(type="string", length=255);
+     */
+    private $address;
+
+    /**
+     * @ORM\Column(type="integer", length=12);
+     */
+    private $phone;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -51,7 +66,7 @@ class Companies
         return $this->firmName;
     }
 
-    public function setFirmName(string $firm_name): self
+    public function setFirmName(string $firmName): self
     {
         $this->firmName = $firmName;
 
@@ -105,4 +120,41 @@ class Companies
 
         return $this;
     }
+
+    public function getIdFirstEmployee(): ?string
+    {
+        return $this->idFirstEmployee;
+    }
+
+    public function setIdFirstEmployee(string $idFirstEmployee): self
+    {
+        $this->idFirstEmployee = $idFirstEmployee;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(string $address): self
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getPhone(): ?int
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(int $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
 }
+

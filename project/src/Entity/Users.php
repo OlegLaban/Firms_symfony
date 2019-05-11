@@ -152,6 +152,7 @@ class Users
 
     public function setDataSJob(?string $dataSJob): self
     {
-        return $this->dataSJob = $dataSJob;
+        $this->dataSJob = $dataSJob;
+        return $this;
     }
 }

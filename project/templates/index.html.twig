@@ -19,7 +19,7 @@
                 </div>
                 <p>
                     {{ company.description }}
-                    <button>View more</button>
+                    <button><a href="{{ path('viewCompany', {'id': company.id}) }}">View more</a></button>
                 </p>
             </div>
             {% endfor %}

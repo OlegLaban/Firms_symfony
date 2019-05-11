@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin panel/User{% endblock %}
+
+{% block body %}
+    <div class="row content">
+        <div class="col-9 AdminBlockContent">
+            {{ form_start(form) }}
+                {{ form_row(form.firmName) }}
+                {{ form_row(form.ogrn) }}
+                {{ form_row(form.oktmo) }}
+                {{ form_row(form.description, {'attr':{
+                    'rows' : '10',
+                    'cols' : '10'
+                }}) }}
+                {{ form_row(form.idFirstEmployee) }}
+                {{ form_row(form.address) }}
+                {{ form_row(form.phone) }}
+                {{ form_row(form.logo) }}
+                <button name="addCompany" type="submit">Сохранить</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

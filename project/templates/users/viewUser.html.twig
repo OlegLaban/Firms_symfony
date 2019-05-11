@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Page{% endblock %}
+
+{% block body %}
+<div class="row content">
+    <div class="col-3">
+        <h2>Фото</h2>
+        <img src="/images/{{ user.photo }}" alt="avatar">
+    </div>
+    <div class="col-9 blockContent">
+        <div class="description">
+            <div class="row">
+                <div class="col-6 static">
+                    Name:
+                </div>
+                <div class="col-6 dynamic">
+                    {{ user.firstName }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 static">
+                    Last name
+                </div>
+                <div class="col-6 dynamic">
+                    {{ user.lastName }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 static">
+                    Age
+                </div>
+                <div class="col-6 dynamic">
+                    Не реализовано
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 static">
+                    Birth_day
+                </div>
+                <div class="col-6 dynamic">
+                    {{ user.birthDay }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 static static">
+                    Company
+                </div>
+                <div class="col-6 table">
+                    <div class="row">
+                        <div class="col-6 static">Logo company</div>
+                        <div class="col-6 static">Compay_name</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 dynamic">
+                            <img src="" alt="">
+                        </div>
+                        <div class="col-6 dynamic">Lorem_company_name</div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /description -->
+
+    </div>
+</div>
+
+
+{% endblock %}
