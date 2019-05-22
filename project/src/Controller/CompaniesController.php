@@ -36,7 +36,7 @@ class CompaniesController extends AbstractController
     {
         $companies = $this->companiesRepository->findBy([],[],5);
 
-
+        dump($companies);
         return $this->render('companies/index.html.twig', [
             'companies' => $companies,
         ]);
