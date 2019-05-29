@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -51,10 +53,32 @@ class Companies
      */
     private $address;
 
+    //TODO - Исправить ошибку, что при больших числах подставляется максимальное число в mysql
+
     /**
-     * @ORM\Column(type="integer", length=12);
+     * @ORM\Column(type="integer", length=14);
      */
     private $phone;
+
+    /**
+     * @var ArrayCollection|User[]
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="company")
+     */
+    private $employee;
+
+    public function __construct()
+    {
+        $this->employee = new ArrayCollection();
+    }
+
+
+    /**
+     * @return ArrayCollection|User[]
+     */
+    public function getEmployee()
+    {
+        return $this->employee->toArray();
+    }
 
     public function getId(): ?int
     {
@@ -156,5 +180,13 @@ class Companies
 
         return $this;
     }
+
+    public function __toString(){
+        // to show the name of the Category in the select
+        return $this->firmName;
+        // to show the id of the Category in the select
+        // return $this->id;
+    }
+
 }
 

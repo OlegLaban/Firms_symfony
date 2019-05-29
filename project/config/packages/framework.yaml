@@ -17,7 +17,7 @@ framework:
         log: true
 
     translator:
-        fallbacks: ['ru']
+        fallbacks: ['en']
 
     templating:
         engines: ['twig', 'php']

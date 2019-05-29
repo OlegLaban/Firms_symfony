@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users Page{% endblock %}
+
+{% block body %}
+    <div class="row content">
+        <div class="col">
+            {{  form_start(form) }}
+                {{ form_row(form.firmName) }}
+                {{ form_row(form.ogrn) }}
+                {{ form_row(form.oktmo) }}
+                {{ form_row(form.description, {'attr': {
+                    'rows' : '10',
+                    'cols' : '10'
+                }}) }}
+                {{ form_row(form.logo) }}
+                {{ form_row(form.idFirstEmployee) }}
+                {{ form_row(form.address) }}
+                {{ form_row(form.phone) }}
+            <button type="submit">Отправить</button>
+            {{ form_end(form) }}
+        </div>
+
+    </div>
+
+
+{% endblock %}
