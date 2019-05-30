@@ -6,11 +6,14 @@ use App\Entity\Companies;
 use App\Entity\User;
 use App\Form\CompaniesType;
 use App\Repository\CompaniesRepository;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CompaniesController extends AbstractController
+class CompaniesController extends Controller
 {
     private $companiesRepository;
 
@@ -27,10 +30,8 @@ class CompaniesController extends AbstractController
     {
         $companies = $this->companiesRepository->findBy([],[],4);
         $company = $this->getDoctrine()->getRepository(Companies::class)->find(5);
-        $user= $this->getDoctrine()->getRepository(User::class)->find(2);
+        $user = $this->getDoctrine()->getRepository(User::class)->find(2);
         dump($company->getEmployee());
-        //$company->getEmployee()->add($user);
-//        dump($company);
         $this->getDoctrine()->getManager()->persist($company);
         $this->getDoctrine()->getManager()->flush();
 
@@ -40,14 +41,27 @@ class CompaniesController extends AbstractController
     }
 
     /**
-     * @Route("/companies", name="viewCompanies_page")
+     * @Route("/companies/{page}", name="viewCompanies_page", defaults={"page": 1})
      */
-    public function viewCompanies()
+    public function viewCompanies(Request $request, $page)
     {
-        $companies = $this->companiesRepository->findBy([],[],4);
+        dump($_GET);
+        //Берем репозиторий.
+        $repository = $this->getDoctrine()->getRepository(Companies::class);
 
-        return $this->render('companies/index.html.twig', [
-            'companies' => $companies,
+        //Берем объект пагинатора для дальнейшей работы.
+        $paginator = $this->get("knp_paginator");
+        //Кладем в переменную результат работы паггинатора. в виде обекта с данными и методами.
+        $paginat =  $paginator->paginate(
+                $repository->findAll(), $request->query->getInt('page', $page), 4
+        );
+
+        $comp = $repository->getCompaniesWithFilter($_GET);
+        dump($comp);
+        //рендерим в шаблон наш объект для отображение компаний(уже с учетом паггинации) и саму пагинацию
+        // внизу страницы.
+        return $this->render("companies/index.html.twig", [
+            "paginat"=> $paginat
         ]);
     }
 

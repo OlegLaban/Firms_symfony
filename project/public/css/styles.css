@@ -227,3 +227,12 @@ form {
   margin: 0 auto;
   border-bottom: 1px solid #14006b; }
 
+.pagination {
+  margin: 0 auto;
+  margin-top: 10px;
+  font-size: 26px; }
+  .pagination span {
+    border: 1px solid black;
+    margin-right: 5px;
+    padding: 2px; }
+

@@ -7,22 +7,22 @@
     <div class="col-3">
         <div class="filter">
             <h2 class="opis">Фильтр:</h2>
-            <form action="/companies/" method="GET" class="filterForm">
+            <form action="/companies" method="GET" class="filterForm">
                 <p>Название по алфавиту:</p>
-                <p>От: <input type="text" name="filterFirm[literaOt]" pattern="[A-Za-zА-Яа-яЁё]"
-                              value="<?php echo $filterCompany['literaOt']; ?>">
+                <p>От: <input type="text" name="filterFirm[firstLit]" pattern="[A-Za-zА-Яа-яЁё]"
+                              value="">
                 </p>
-                <p>До: <input type="text" name="filterFirm[literaDo]" pattern="[A-Za-zА-Яа-яЁё]"
-                              value="<?php echo $filterCompany['literaDo']; ?>">
+                <p>До: <input type="text" name="filterFirm[lastLit]" pattern="[A-Za-zА-Яа-яЁё]"
+                              value="">
                 </p>
                 <p class="opis">Колличество сотрудников</p>
                 <div class="count">
                     <p>От: <input type="range" min="0" max="100" id="chisloOt" name="filterFirm[chisloOt]"
-                                  value="<?php echo $filterCompany['chisloOt'];?>">
+                                  value="">
                         <span id="outputOt"><?php echo $filterCompany['chisloOt'];?></span>/100
                     </p>
                     <p>До: <input type="range" min="0" max="100" id="chisloDo" name="filterFirm[chisloDo]"
-                                  value="<?php echo $filterCompany['chisloDo'];?>">
+                                  value="">
                         <span id="outputDo"><?php echo $filterCompany['chisloDo'];?></span>/100
                     </p>
                 </div>
@@ -34,8 +34,7 @@
     <div class="col-9 blockContent">
 
         <div class="row rowContent">
-
-            {% for company in companies %}
+            {% for company in paginat %}
                 <div class="col-4">
                     <div class="row">
                         <img src="/images/{{ company.logo }}" alt="" class="logoCompany">
@@ -48,10 +47,8 @@
                 </div>
             {% endfor %}
         </div>
-        <div class="row pagination">
-            <?php
-                echo $pagination->get();
-            ?>
+        <div class="row navigation">
+            {{ knp_pagination_render(paginat) }}
         </div>
     </div>
 </div>
