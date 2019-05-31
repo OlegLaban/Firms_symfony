@@ -31,7 +31,6 @@ class CompaniesController extends Controller
         $companies = $this->companiesRepository->findBy([],[],4);
         $company = $this->getDoctrine()->getRepository(Companies::class)->find(5);
         $user = $this->getDoctrine()->getRepository(User::class)->find(2);
-        dump($company->getEmployee());
         $this->getDoctrine()->getManager()->persist($company);
         $this->getDoctrine()->getManager()->flush();
 
@@ -45,23 +44,42 @@ class CompaniesController extends Controller
      */
     public function viewCompanies(Request $request, $page)
     {
-        dump($_GET);
+        if(isset($_GET['filterFirm'])){
+            $data = $_GET;
+        }else{
+            $data = [];
+        }
         //Берем репозиторий.
         $repository = $this->getDoctrine()->getRepository(Companies::class);
 
         //Берем объект пагинатора для дальнейшей работы.
         $paginator = $this->get("knp_paginator");
         //Кладем в переменную результат работы паггинатора. в виде обекта с данными и методами.
-        $paginat =  $paginator->paginate(
+        if(isset($data['filterFirm']) && !isset($data['resetFilterFirm'])){
+            $paginat =  $paginator->paginate(
+                $repository->getCompaniesWithFilter($data), $request->query->getInt('page', $page), 4
+            );
+        }else{
+            if(isset($_GET['resetFilterFirm'])){
+                unset($_GET['filterFirm']);
+                unset($_GET['resetFilterFirm']);
+                $data['filterFirm'] = [];
+            }
+            $paginat =  $paginator->paginate(
                 $repository->findAll(), $request->query->getInt('page', $page), 4
-        );
+            );
+        }
+        dump($paginat);
 
-        $comp = $repository->getCompaniesWithFilter($_GET);
-        dump($comp);
+        //$comp = $repository->getCompaniesWithFilter($_GET);
+        //dump($comp);
+
         //рендерим в шаблон наш объект для отображение компаний(уже с учетом паггинации) и саму пагинацию
         // внизу страницы.
+        dump($data);
         return $this->render("companies/index.html.twig", [
-            "paginat"=> $paginat
+            "paginat"=> $paginat,
+            "data" => $data['filterFirm']
         ]);
     }
 

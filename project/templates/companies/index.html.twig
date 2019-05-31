@@ -10,20 +10,20 @@
             <form action="/companies" method="GET" class="filterForm">
                 <p>Название по алфавиту:</p>
                 <p>От: <input type="text" name="filterFirm[firstLit]" pattern="[A-Za-zА-Яа-яЁё]"
-                              value="">
+                              value="{% if data|length > 0 %}{{ data.firstLit }}{% endif %}">
                 </p>
                 <p>До: <input type="text" name="filterFirm[lastLit]" pattern="[A-Za-zА-Яа-яЁё]"
-                              value="">
+                              value="{% if  data|length > 0 %}{{ data.lastLit }}{% endif %}">
                 </p>
                 <p class="opis">Колличество сотрудников</p>
                 <div class="count">
                     <p>От: <input type="range" min="0" max="100" id="chisloOt" name="filterFirm[chisloOt]"
-                                  value="">
-                        <span id="outputOt"><?php echo $filterCompany['chisloOt'];?></span>/100
+                                  value="{% if  data|length > 0 %}{{ data.chisloOt }}{% else %}{{ 0 }}{% endif %}">
+                        <span id="outputOt">{% if  data|length > 0 %}{{ data.chisloOt }}{% else %}{{ 0 }}{% endif %}</span>/100
                     </p>
                     <p>До: <input type="range" min="0" max="100" id="chisloDo" name="filterFirm[chisloDo]"
-                                  value="">
-                        <span id="outputDo"><?php echo $filterCompany['chisloDo'];?></span>/100
+                                  value="{% if  data|length > 0 %}{{ data.chisloDo }}{% else %}{{ 0 }}{% endif %}">
+                        <span id="outputDo">{% if  data|length > 0 %}{{ data.chisloDo }}{% else %}{{ 0 }}{% endif %}</span>/100
                     </p>
                 </div>
                 <input type="submit" name="subFilterFirm" value="Отправить">
