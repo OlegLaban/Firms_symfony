@@ -4,10 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Users;
 use App\Repository\UsersRepository;
+use Knp\Component\Pager\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class UsersController extends AbstractController
+class UsersController extends Controller
 {
     private $usersRepository;
 
@@ -18,13 +21,17 @@ class UsersController extends AbstractController
 
 
     /**
-     * @Route("/users", name="users")
+     * @Route("/users/{page}", name="users", defaults={"page": 1})
      */
-    public function index()
+    public function index(Request $request, $page)
     {
-        $users = $this->usersRepository->findAll();
+        $paginator = $this->get("knp_paginator");
+        $paginat =  $paginator->paginate(
+            $users = $this->usersRepository->findAll(), $request->query->getInt('page', $page), 2
+        );
+
         return $this->render('users/index.html.twig', [
-            'users' => $users,
+            'users' => $paginat,
         ]);
     }
 

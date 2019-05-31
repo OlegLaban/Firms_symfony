@@ -60,9 +60,7 @@
         </div>
         {% endfor %}
         <div class="row pagination">
-            <?php
-            echo $pagination->get();
-            ?>
+            {{ knp_pagination_render(users) }}
         </div>
     </div>
 </div>

@@ -55,21 +55,22 @@ class CompaniesController extends Controller
         //Берем объект пагинатора для дальнейшей работы.
         $paginator = $this->get("knp_paginator");
         //Кладем в переменную результат работы паггинатора. в виде обекта с данными и методами.
-        if(isset($data['filterFirm']) && !isset($data['resetFilterFirm'])){
+        if(isset($data['filterFirm']) && !isset($data['resetFilterFirm']) && $repository->dFC($data)){
             $paginat =  $paginator->paginate(
                 $repository->getCompaniesWithFilter($data), $request->query->getInt('page', $page), 4
             );
         }else{
+            //Если была нажата кнопка "сброс" то очищаем элементы массива $_GET от данных принадлежащих форме фильтрации.
             if(isset($_GET['resetFilterFirm'])){
                 unset($_GET['filterFirm']);
                 unset($_GET['resetFilterFirm']);
-                $data['filterFirm'] = [];
             }
+            //Что бы избежать ошибки "не найден filterFirm" присваеваем ему пустой массив.
+            $data['filterFirm'] = [];
             $paginat =  $paginator->paginate(
                 $repository->findAll(), $request->query->getInt('page', $page), 4
             );
         }
-        dump($paginat);
 
         //$comp = $repository->getCompaniesWithFilter($_GET);
         //dump($comp);
