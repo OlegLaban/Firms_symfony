@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Companies;
 use App\Entity\Users;
 use App\Repository\UsersRepository;
 use Knp\Component\Pager\Paginator;
@@ -25,12 +26,19 @@ class UsersController extends Controller
      */
     public function index(Request $request, $page)
     {
+        if(isset($_GET['filter'])){
+            $dataFilter = $_GET['filter'];
+            $usersFilter = $this->usersRepository->filterUsers($dataFilter);
+        }
+        $companies = $this->getDoctrine()->getRepository(Companies::class);
+        $companiesArr = $companies->findAll();
         $paginator = $this->get("knp_paginator");
+        $users = $this->usersRepository->findAll();
         $paginat =  $paginator->paginate(
-            $users = $this->usersRepository->findAll(), $request->query->getInt('page', $page), 2
+            $users, $request->query->getInt('page', $page), 2
         );
-
         return $this->render('users/index.html.twig', [
+            'companies' => $companiesArr,
             'users' => $paginat,
         ]);
     }

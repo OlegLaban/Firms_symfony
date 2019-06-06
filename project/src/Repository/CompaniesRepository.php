@@ -52,7 +52,6 @@ class CompaniesRepository extends ServiceEntityRepository
     {
 
         $em = $this->getEntityManager();
-        dump($data);
         if(!empty($data)){
             //Получаем менеджер для работы с базой.
             $em = $this->getEntityManager();

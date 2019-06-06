@@ -7,7 +7,7 @@ use App\Entity\Users;
 use App\Form\CompaniesType;
 use App\Form\UsersType;
 use App\Repository\CompaniesRepository;
-use App\Repository\UsersRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

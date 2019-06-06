@@ -7,23 +7,20 @@
     <div class="col-3">
         <div class="filter">
             <h2 class="opis">Фильтр:</h2>
-            <form action="/users/" method="get" class="filterForm">
+            <form action="{{ path('users') }}" method="get" class="filterForm">
                 <p>Фамилии по алфавиту:</p>
                 <p>От: <input type="text" name="filter[literaOt]" pattern="[A-Za-zА-Яа-яЁё]"
-                              value="<?php if(isset($data['literaOt'])){ echo $data['literaOt']; } ?>">
+                              value="">
                 </p>
                 <p>До: <input type="text" name="filter[literaDo]" pattern="[A-Za-zА-Яа-яЁё]"
-                              value="<?php if(isset($data['literaDo'])){ echo $data['literaDo']; } ?>">
+                              value="">
                 </p>
                 <p class="opis">Company</p>
                 <div class="radioCompanyFilter">
-                    <?php foreach ($arrCompanyName as $item): ?>
-                    <p><input type="checkbox" name="filter[company][]"
-                        <?php if(isset($data['company'])){if(in_array($item['id_firm'], $data['company'])){ echo "checked='checked'"; }} ?>
-                        value="<?php echo $item['id_firm']; ?>">
-                        <?php echo $item['firm_name']; ?>
-                    </p>
-                    <?php endforeach;?>
+                    {% for company in companies %}
+                        <input type="checkbox" name="filter[company][]" value="{{ company.id }}"> {{ company.firmName }}
+                        <br>
+                    {% endfor %}
                 </div>
                 <p class="opis">Date</p>
                 <div class="date">
@@ -53,7 +50,7 @@
         <div class="row rowContent">
             <div class="col-2 table">{{ user.firstName }}</div>
             <div class="col-2 table">{{ user.lastName }}</div>
-            <div class="col-2 table">{{ user.birthDay }}</div>
+            <div class="col-2 table">{{ "now"|date("Y") - user.birthDay|date("Y") }}</div>
             <div class="col-2 table">Имя фирмы (реализовать)</div>
             <div class="col-2 table">{{ user.dataSJob }}</div>
             <div class="col-2 table"><a href="{{ path('viewUser', {'id': user.id}) }}">More...</a></div>

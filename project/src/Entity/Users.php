@@ -155,4 +155,5 @@ class Users
         $this->dataSJob = $dataSJob;
         return $this;
     }
+
 }
