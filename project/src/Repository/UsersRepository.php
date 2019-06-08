@@ -54,71 +54,77 @@ class UsersRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $count = 0;
         $dataForExec = array();
-        $sql = "SELECT * FROM fos_user WHERE fos_user.id IN (SELECT t2.id FROM
-        (SELECT f.id, f.birth_day, f.first_name, f.last_name, c.firm_name, f.company_id FROM fos_user as f INNER JOIN companies as c on f.company_id = c.id) as t2
+        $sql = "SELECT fs.id, fs.first_name AS firstName, fs.last_name AS lastName, fs.birth_day AS birthDay, fs.data_sjob AS dataSJob
+        FROM fos_user AS fs WHERE fs.id IN (SELECT t2.id FROM
+        (SELECT f.id, f.birth_day, f.first_name, f.last_name, c.firm_name, f.company_id FROM fos_user as f 
+        INNER JOIN companies as c on f.company_id = c.id) as t2
         WHERE ";
+        // Образец конкотенируемой части:
         // "(first_name BETWEEN 'А%' AND 'З%') AND (company_id IN (5)) AND (birth_day BETWEEN '1990-01-01' AND '2000-01-01'))";
         if($data['literaOt'] != ''  && $data['literaDo'] != ''){
-            $sql .= "(first_name BETWEN :literaOt AND :literaDo ) ";
+            $sql .= "( first_name BETWEEN :literaOt AND :literaDo ) ";
             $count++;
-            $dataForExec[':literaOt'] = $data['literaOt'] . "% ";
-            $dataForExec[':literaDo'] = $data['literaDo'] . "% ";
+            $dataForExec[':literaOt'] = $data['literaOt'] . "%";
+            $dataForExec[':literaDo'] = $data['literaDo'] . "%";
         }else if($data['literaOt'] == '' && $data['literaDo'] != ''){
-            $sql .= "(first_name BETWEN :literaOt AND :literaDo ) ";
+            $sql .= "( first_name BETWEEN :literaOt AND :literaDo ) ";
             $count++;
-            $dataForExec[':literaDo'] = $data['literaDo'] . "% ";
-            $dataForExec[':literaOt'] =  $this->getLitera($data['literaOt']) . "% ";
+            $dataForExec[':literaDo'] = $data['literaDo'] . "%";
+            $dataForExec[':literaOt'] =  $this->getLitera($data['literaDo'], false) . "%";
         }else if($data['literaOt'] != '' && $data['literaDo'] == ''){
-            $sql .= "(first_name BETWEN :literaOt AND :literaDo ) ";
+            $sql .= "( first_name BETWEEN :literaOt AND :literaDo ) ";
             $count++;
-            $dataForExec[':literaDo'] = $this->getLitera($data['literaDo']) . "% ";
-            $dataForExec[':literaOt'] = $data['literaOt'] . "% ";
+            $dataForExec[':literaDo'] = $this->getLitera($data['literaOt']) . "%";
+            $dataForExec[':literaOt'] = $data['literaOt'] . "%";
         }
 
-        if(count($data['company']) > 0){
+        if(isset($data['company']) && count($data['company']) > 0){
             if(count($data['company']) == 1){
+                $company = reset($data['company']);
                 if($count == 0){
-                    $sql .= "(company_id IN ( :company ) ) ";
+                    $sql .= "( company_id IN (" . $company . ") ) ";
                 }else if($count > 0){
-                    $sql .= "AND (company_id IN ( :company ) ) ";
+                    $sql .= "AND ( company_id IN (" . $company . ") ) ";
                 }
-                $dataForExec[':company'] = reset($data['company']);
                 $count++;
-            }else if(count($data['company']) > 1){
+            }else if( isset($data['company']) && count($data['company']) > 1){
+                $company = implode(", " , $data['company']);
                 if($count == 0){
-                    $sql .= "(company_id IN ( :company )) ";
+                    $sql .= "( company_id IN ( " . $company . ")) ";
                 }else if($count > 0){
-                    $sql .= "AND (company_id IN ( :company )) ";
+                    $sql .= "AND ( company_id IN (" . $company . ")) ";
                 }
-                $dataForExec[':company'] = implode(", " , $data['company']);
+                $company = implode(", " , $data['company']);
             }
         }
 
         if($data['dateOt'] != ''  && $data['dateDo'] != ''){
             if($count == 0){
-                $sql .= "(birth_day BETWEN :dateOt AND :dateDo ) ";
+                $sql .= "( birth_day BETWEEN :dateOt AND :dateDo )) ";
             }else if($count > 0){
-                $sql .= "AND (birth_day BETWEN :dateOt AND :dateDo ) ";
+                $sql .= "AND ( birth_day BETWEEN :dateOt AND :dateDo )) ";
             }
             $count++;
             $dataForExec[':dateOt'] = $data['dateOt'];
             $dataForExec[':dateDo'] = $data['dateDo'];
         }else if($data['dateOt'] == '' && $data['dateDo'] != ''){
             if($count == 0){
-                $sql .= "(birth_day BETWEN (SELECT MIN(`birth_day`) AS `min_birth_day`  FROM `fos_user` ORDER BY `min_birth_day` LIMIT 1) AND :dateDo ) ";
+                $sql .= "( birth_day BETWEEN (SELECT MIN(`birth_day`) AS `min_birth_day`  FROM `fos_user` ORDER BY `min_birth_day` LIMIT 1) AND :dateDo )) ";
             }else if($count > 0){
-                $sql .= "AND (birth_day BETWEN (SELECT MIN(`birth_day`) AS `min_birth_day`  FROM `fos_user` ORDER BY `min_birth_day` LIMIT 1) AND :dateDo ) ";
+                $sql .= "AND ( birth_day BETWEEN (SELECT MIN(`birth_day`) AS `min_birth_day`  FROM `fos_user` ORDER BY `min_birth_day` LIMIT 1) AND :dateDo )) ";
             }
             $count++;
             $dataForExec[':dateDo'] = $data['dateDo'];
         }else if($data['dateOt'] != '' && $data['dateDo'] == ''){
             if($count == 0){
-                $sql .= "(birth_day BETWEN :dateOt AND NOW())";
+                $sql .= "(birth_day BETWEEN :dateOt AND NOW() ))";
             }else if($count > 0){
-                $sql .= "AND (birth_day BETWEN :dateOt AND NOW() ) ";
+                $sql .= "AND (birth_day BETWEEN :dateOt AND NOW() )) ";
             }
             $count++;
-            $dataForExec[':dateDo'] = $data['dateDo'];
+            $dataForExec[':dateOt'] = $data['dateOt'];
+        }else if($count > 0){
+            $sql .=  ")";
         }
         $date =  $em->getConnection()->prepare($sql);
         //Выполняем.
@@ -127,6 +133,10 @@ class UsersRepository extends ServiceEntityRepository
     }
 
     public function getLitera($litera, $bool = true){
+        /*
+         * Передается известная буква (например первая) а затем передается bool значение если нам нужна последняя буква
+         * то передается true (но это не обязательно) так как по умолчанию true а если нам нужна первая буква то передается
+         * последняя буква и bool раное false*/
         $check1 = preg_match("/[0-9a-zA-Z]+/", $litera);
         $check2 = preg_match("/[0-9а-яА-ЯёЁ]+/", $litera);
         if($check2){

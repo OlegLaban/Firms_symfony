@@ -30,13 +30,20 @@ class UsersController extends Controller
             $dataFilter = $_GET['filter'];
             $usersFilter = $this->usersRepository->filterUsers($dataFilter);
         }
+        dump($usersFilter);
         $companies = $this->getDoctrine()->getRepository(Companies::class);
         $companiesArr = $companies->findAll();
         $paginator = $this->get("knp_paginator");
         $users = $this->usersRepository->findAll();
-        $paginat =  $paginator->paginate(
-            $users, $request->query->getInt('page', $page), 2
-        );
+            if(isset($_GET['filter'])){
+                $paginat =  $paginator->paginate(
+                    $usersFilter, $request->query->getInt('page', $page), 2
+                );
+            }else{
+                $paginat =  $paginator->paginate(
+                    $users, $request->query->getInt('page', $page), 2
+                );
+            }
         return $this->render('users/index.html.twig', [
             'companies' => $companiesArr,
             'users' => $paginat,
