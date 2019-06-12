@@ -62,17 +62,17 @@ class UsersRepository extends ServiceEntityRepository
         // Образец конкотенируемой части:
         // "(first_name BETWEEN 'А%' AND 'З%') AND (company_id IN (5)) AND (birth_day BETWEEN '1990-01-01' AND '2000-01-01'))";
         if($data['literaOt'] != ''  && $data['literaDo'] != ''){
-            $sql .= "( first_name BETWEEN :literaOt AND :literaDo ) ";
+            $sql .= "( last_name BETWEEN :literaOt AND :literaDo ) ";
             $count++;
             $dataForExec[':literaOt'] = $data['literaOt'] . "%";
             $dataForExec[':literaDo'] = $data['literaDo'] . "%";
         }else if($data['literaOt'] == '' && $data['literaDo'] != ''){
-            $sql .= "( first_name BETWEEN :literaOt AND :literaDo ) ";
+            $sql .= "( last_name BETWEEN :literaOt AND :literaDo ) ";
             $count++;
             $dataForExec[':literaDo'] = $data['literaDo'] . "%";
             $dataForExec[':literaOt'] =  $this->getLitera($data['literaDo'], false) . "%";
         }else if($data['literaOt'] != '' && $data['literaDo'] == ''){
-            $sql .= "( first_name BETWEEN :literaOt AND :literaDo ) ";
+            $sql .= "( last_name BETWEEN :literaOt AND :literaDo ) ";
             $count++;
             $dataForExec[':literaDo'] = $this->getLitera($data['literaOt']) . "%";
             $dataForExec[':literaOt'] = $data['literaOt'] . "%";

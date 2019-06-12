@@ -26,11 +26,12 @@ class UsersController extends Controller
      */
     public function index(Request $request, $page)
     {
+        $dataFilter = [];
         if(isset($_GET['filter'])){
             $dataFilter = $_GET['filter'];
             $usersFilter = $this->usersRepository->filterUsers($dataFilter);
+            dump($dataFilter);
         }
-        dump($usersFilter);
         $companies = $this->getDoctrine()->getRepository(Companies::class);
         $companiesArr = $companies->findAll();
         $paginator = $this->get("knp_paginator");
@@ -47,6 +48,7 @@ class UsersController extends Controller
         return $this->render('users/index.html.twig', [
             'companies' => $companiesArr,
             'users' => $paginat,
+            'dataFilter' => $dataFilter,
         ]);
     }
 

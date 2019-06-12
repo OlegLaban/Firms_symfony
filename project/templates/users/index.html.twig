@@ -10,25 +10,26 @@
             <form action="{{ path('users') }}" method="get" class="filterForm">
                 <p>Фамилии по алфавиту:</p>
                 <p>От: <input type="text" name="filter[literaOt]" pattern="[A-Za-zА-Яа-яЁё]"
-                              value="">
+                              value="{% if 'literaOt' in dataFilter|keys %}{{ dataFilter.literaOt }}{% endif %}">
                 </p>
                 <p>До: <input type="text" name="filter[literaDo]" pattern="[A-Za-zА-Яа-яЁё]"
-                              value="">
+                              value="{% if 'literaDo' in dataFilter|keys %}{{ dataFilter.literaDo }}{% endif %}">
                 </p>
                 <p class="opis">Company</p>
                 <div class="radioCompanyFilter">
                     {% for company in companies %}
-                        <input type="checkbox" name="filter[company][]" value="{{ company.id }}"> {{ company.firmName }}
+                        <input type="checkbox" name="filter[company][]" {% if( company.id in dataFilter.company ) %} checked="checked" {% endif %}
+                               value="{{ company.id }}"> {{ company.firmName }}
                         <br>
                     {% endfor %}
                 </div>
                 <p class="opis">Date</p>
                 <div class="date">
                     <p>От: <input type="date" name="filter[dateOt]"
-                                  value="<?php if(isset($data['dateOt']) && $data['dateOt'] != ''){echo $data['dateOt'];} ?>">
+                                  value="{% if 'dateOt' in dataFilter|keys %}{{ dataFilter.dateOt }}{% endif %}">
                     </p>
-                    <p>До: <input type="date" name="filter[dateDo]" value="<?php
-                        if(isset($data['dateOt']) && $data['dateDo'] != ''){echo $data['dateDo'];} ?>">
+                    <p>До: <input type="date" name="filter[dateDo]"
+                                  value="{% if 'dateDo' in dataFilter|keys %}{{ dataFilter.dateDo }}{% endif %}">
                     </p>
                 </div>
                 <input type="submit" name="subFilter" value="Фильтруй">
@@ -50,7 +51,7 @@
         <div class="row rowContent">
             <div class="col-2 table">{{ user.firstName }}</div>
             <div class="col-2 table">{{ user.lastName }}</div>
-            <div class="col-2 table">{{ "now"|date("Y") - user.birthDay|date("Y") }}</div>
+            <div class="col-2 table">{{ user.birthDay|corAge }}</div>
             <div class="col-2 table">Имя фирмы (реализовать)</div>
             <div class="col-2 table">{{ user.dataSJob }}</div>
             <div class="col-2 table"><a href="{{ path('viewUser', {'id': user.id}) }}">More...</a></div>
