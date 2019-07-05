@@ -4,6 +4,7 @@
 namespace App\Twig;
 
 
+
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -17,11 +18,20 @@ class AppExtension extends AbstractExtension
        ];
     }
 
-    public function correctAge(string $data)
+    public function correctAge($data)
     {
-        $date =  strtotime("$data GMT");
-        $result = floor((time() - $date)/31556926);
-        return $result;
+        if(is_string($data)){
+            $data =  strtotime("$data GMT");
+            $result = floor((time() - $data)/31556926);
+            return $result;
+        }else if(is_int($data)){;
+            $result = floor((time() - $data)/31556926);
+            return $result;
+        }else if(is_object($data)){
+            $result = floor((time() - intval($data->getTimestamp()))/31556926);
+            return $result;
+        }
+
 
     }
 

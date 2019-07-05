@@ -6,6 +6,7 @@ use App\Entity\Companies;
 use App\Entity\User;
 use App\Form\CompaniesType;
 use App\Repository\CompaniesRepository;
+use http\Env\Response;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -72,12 +73,8 @@ class CompaniesController extends Controller
             );
         }
 
-        //$comp = $repository->getCompaniesWithFilter($_GET);
-        //dump($comp);
-
         //рендерим в шаблон наш объект для отображение компаний(уже с учетом паггинации) и саму пагинацию
         // внизу страницы.
-        dump($data);
         return $this->render("companies/index.html.twig", [
             "paginat"=> $paginat,
             "data" => $data['filterFirm']
@@ -127,6 +124,20 @@ class CompaniesController extends Controller
 
     }
 
+    /**
+     * @param $dataSearch
+     * @Route("/searchCompanies", name="search")
+     */
+    public function getCompaniesData()
+    {
+        $payload  =  file_get_contents('php://input');
+        $dataSearch  =  json_decode($payload, true);
+
+        $companies = $this->getDoctrine()->getRepository(Companies::class);
+        $company = $companies->getCompaniesBySearch($dataSearch);
+        $return = json_encode($company);
+        return $this->json($return);
+    }
 
 
 }

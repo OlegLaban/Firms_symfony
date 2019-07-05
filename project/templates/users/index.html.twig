@@ -9,19 +9,28 @@
             <h2 class="opis">Фильтр:</h2>
             <form action="{{ path('users') }}" method="get" class="filterForm">
                 <p>Фамилии по алфавиту:</p>
-                <p>От: <input type="text" name="filter[literaOt]" pattern="[A-Za-zА-Яа-яЁё]"
+                <p>От: <input type="text" name="filter[literaOt]" pattern="^[A-Za-zА-Яа-яЁё]+$"
                               value="{% if 'literaOt' in dataFilter|keys %}{{ dataFilter.literaOt }}{% endif %}">
                 </p>
-                <p>До: <input type="text" name="filter[literaDo]" pattern="[A-Za-zА-Яа-яЁё]"
+                <p>До: <input type="text" name="filter[literaDo]" pattern="^[A-Za-zА-Яа-яЁё]+$"
                               value="{% if 'literaDo' in dataFilter|keys %}{{ dataFilter.literaDo }}{% endif %}">
                 </p>
                 <p class="opis">Company</p>
-                <div class="radioCompanyFilter">
-                    {% for company in companies %}
-                        <input type="checkbox" name="filter[company][]" {% if( company.id in dataFilter.company ) %} checked="checked" {% endif %}
-                               value="{{ company.id }}"> {{ company.firmName }}
-                        <br>
-                    {% endfor %}
+                <div class="radioCompanyFilter"  id="searchCompany" >
+                    <input type="text" name="searchCompany" placeholder="Поиск по компаниям" v-model="textSearch">
+                    <div v-if="status">
+                        {% for company in companies %}
+                            <input type="checkbox" name="filter[company][]" {% if( 'company' in dataFilter|keys and company.id in dataFilter.company ) %} checked="checked" {% endif %}
+                                   value="{{ company.id }}"> {{ company.firmName }}
+                            <br>
+                        {% endfor %}
+                    </div>
+                        <div v-for="companySearch in companiesSearch">
+                            <input  type="checkbox" name="filter[company][]"
+                                   v-bind:value='companySearch.id' >  ${ companySearch.firmName }
+                            <br>
+                        </div>
+                        <!-- <input type="checkbox" name="filter[company][]" value=""> -->
                 </div>
                 <p class="opis">Date</p>
                 <div class="date">
@@ -63,5 +72,49 @@
     </div>
 </div>
 
+<script type="text/javascript">
+   let ele =  new Vue({
+        el: '#searchCompany',
+        delimiters: ['${', '}'],
+        data: {
+            dat: new FormData(),
+            message: 'Hello Vue.js!',
+            textSearch: '',
+            status: true,
+            companiesSearch: [],
 
+        },
+        watch: {
+            textSearch: function(){
+                if( this.textSearch.length > 1){
+                    console.log('work');
+                    this.addSearch();
+                }
+            },
+            status: function(){
+
+            }
+        },
+        methods: {
+             addSearch(){
+                 ele.dat.append('data', 'none');
+                 fetch('/searchCompanies', {
+                     method: 'post',
+                     headers: {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                     },
+                     body: JSON.stringify({data: this.textSearch, str: 'Some string'})
+
+                 }).then(function(response) {
+                         return response.json();
+                     }).then(function(data) {
+                         ele.status = false;
+                       ele.companiesSearch = JSON.parse(data.toString());
+                       console.log(ele.status);
+                 });
+             }
+        },
+    })
+</script>
 {% endblock %}

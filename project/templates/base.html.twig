@@ -5,6 +5,7 @@
         <meta name="viewport"
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         {% block stylesheets %}
         <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-grid.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/styles.css') }}">
@@ -36,8 +37,8 @@
             </div>
             <div class="row nav">
                 <div class="col-2"><a href="/">Home</a></div>
-                <div class="col-2"><a href="/companies/">Company</a></div>
-                <div class="col-2"><a href="/users/">Users</a></div>
+                <div class="col-2"><a href="/companies">Company</a></div>
+                <div class="col-2"><a href="/users">Users</a></div>
             </div>
 
         {% block body %}{% endblock %}
@@ -85,6 +86,7 @@
             <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
             <script>
                 $('.dropdown-toggle').dropdown();
             </script>

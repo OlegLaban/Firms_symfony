@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Companies;
-use App\Entity\Users;
+use App\Entity\User;
 use App\Repository\UsersRepository;
 use Knp\Component\Pager\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,20 +27,26 @@ class UsersController extends Controller
     public function index(Request $request, $page)
     {
         $dataFilter = [];
-        if(isset($_GET['filter'])){
+
+        if(isset($_GET['filter']) && !isset($_GET['unsetSub'])){
             $dataFilter = $_GET['filter'];
             $usersFilter = $this->usersRepository->filterUsers($dataFilter);
-            dump($dataFilter);
+            //$this->usersRepository->filterUsersTest($dataFilter);
         }
         $companies = $this->getDoctrine()->getRepository(Companies::class);
         $companiesArr = $companies->findAll();
         $paginator = $this->get("knp_paginator");
         $users = $this->usersRepository->findAll();
-            if(isset($_GET['filter'])){
+            if(isset($_GET['filter']) && !isset($_GET['unsetSub'])){
                 $paginat =  $paginator->paginate(
                     $usersFilter, $request->query->getInt('page', $page), 2
                 );
             }else{
+                if(isset($_GET['unsetSub'])){
+                    unset($_GET['filter']);
+                    unset($_GET['unsetSub']);
+                    $dataFilter = [];
+                }
                 $paginat =  $paginator->paginate(
                     $users, $request->query->getInt('page', $page), 2
                 );
@@ -56,7 +62,7 @@ class UsersController extends Controller
     /**
      * @Route("/user/{id}", name="viewUser")
      */
-    public function viewUser(Users $user)
+    public function viewUser(User $user)
     {
         //TODO - Реализовать высчитование возраста исходя из даты рождения.
         //TODO - Реализовать вывод данных о компании в которой работает сотрудник

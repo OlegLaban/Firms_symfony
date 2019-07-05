@@ -129,6 +129,20 @@ class CompaniesRepository extends ServiceEntityRepository
         }
     }
 
+    public function getCompaniesBySearch($dataSearch)
+    {
+        $em = $this->getEntityManager();
+
+        $sql = "SELECT `id`, `firm_name` AS firmName FROM `companies` WHERE `firm_name` LIKE :dataSearch";
+        $arrayExec = array(
+            ':dataSearch' => $dataSearch['data'] . '%'
+        );
+
+        $data = $em->getConnection()->prepare($sql);
+        $data->execute($arrayExec);
+        return $data->fetchAll();
+    }
+
     /**
      * $litera Сюда передается буква как латинская так кирилица"
      * $bool Сюда передается булева значение первая/последняя (false/true) по умолчанию идет как последняя.

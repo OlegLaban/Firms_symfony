@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
-use App\Entity\Users;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\ORM\Query\ResultSetMapping;
 use App\Repository\CompaniesRepository as OtherData;
 
 /**
@@ -17,7 +18,7 @@ class UsersRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, Users::class);
+        parent::__construct($registry, User::class);
     }
 
     // /**
@@ -49,7 +50,84 @@ class UsersRepository extends ServiceEntityRepository
     }
     */
 
-    public function filterUsers($data)
+    public function filterUsers($data){
+     $em = $this->createQueryBuilder('u')
+         ->innerJoin('u.company', 'c');
+     $count = 0;
+     $parametrs = [];
+        if($data['literaOt'] != ''  && $data['literaDo'] != ''){
+            $count++;
+            $em->andWhere($em->expr()->between('u.lastName', ':literaOt', ':literaDo'));
+            $parametrs = array_merge( $parametrs, array(
+                ':literaOt' => $data['literaOt'] . "%",
+                ':literaDo' => $data['literaDo'] . "%"
+            ));
+        }else if($data['literaOt'] == '' && $data['literaDo'] != ''){
+            $count++;
+            $em->andWhere($em->expr()->between('u.lastName', ':literaOt', ':literaDo'));
+            $parametrs = array_merge( $parametrs,array(
+                ':literaOt' => $this->getLitera($data['literaDo'], false) . "%",
+                ':literaDo' => $data['literaDo'] . "%"
+            ));
+        }else if($data['literaOt'] != '' && $data['literaDo'] == ''){
+            $count++;
+            $em->andWhere($em->expr()->between('u.lastName', ':literaOt', ':literaDo'));
+            $parametrs = array_merge( $parametrs,array(
+                ':literaOt' => $data['literaOt'] . "%",
+                ':literaDo' => $this->getLitera($data['literaOt']) . "%"
+            ));
+        }
+       // dump($em->getQuery()->getResult());
+
+        if(isset($data['company']) && count($data['company']) > 0){
+            //if(count($data['company']) == 1){
+                $company = reset($data['company']);
+                $count++;
+                $em->andWhere($em->expr()->in('c.id', ':companies'));
+                $parametrs = array_merge( $parametrs,array(
+                    ':companies' => $company
+                ));
+
+                //if($count == 0){
+                //    $sql .= "( company_id IN (" . $company . ") ) ";
+                //}else if($count > 0){
+                  //  $sql .= "AND ( company_id IN (" . $company . ") ) ";
+                //}
+            /*}else if(isset($data['company']) && count($data['company']) > 1){
+                $company = implode(", " , $data['company']);
+                $em->andWhere($em->expr()->in('c.id'))
+            }*/
+        }
+
+        if($data['dateOt'] != ''  && $data['dateDo'] != ''){
+            $em->andWhere($em->expr()->between('u.birthDay', ':dateOt', ':dateDo'));
+            $parametrs = array_merge( $parametrs,array(
+                ':dateDo' => $data['dateDo'] . "%",
+                ':dateOt' => $data['dateOt'] . "%"
+            ));
+        }else if($data['dateOt'] == '' && $data['dateDo'] != ''){
+            $em->andWhere($em->expr()->between('u.birthDay', ':dateOt', ':dateDo'));
+            $parametrs = array_merge( $parametrs,array(
+                ':dateDo' => $data['dateDo'] . "%",
+                ':dateOt' => $em->expr()->min('u.birthDay') . "%"
+            ));
+        }else if($data['dateOt'] != '' && $data['dateDo'] == ''){
+
+            $em->andWhere($em->expr()->between('u.birthDay', ':dateOt', ':dateDo'));
+            $parametrs = array_merge( $parametrs,array(
+                ':dateDo' => date('Y-m-d H:i:s') . "%",
+                ':dateOt' => $data['dateOt'] . "%"
+            ));
+
+        }
+        $em->setParameters($parametrs);
+        dump($em->getQuery()->getResult());
+        return $em->getQuery();
+
+
+    }
+
+    public function filterUsersBack($data)
     {
         $em = $this->getEntityManager();
         $count = 0;
@@ -126,6 +204,8 @@ class UsersRepository extends ServiceEntityRepository
         }else if($count > 0){
             $sql .=  ")";
         }
+
+
         $date =  $em->getConnection()->prepare($sql);
         //Выполняем.
         $date->execute($dataForExec);
